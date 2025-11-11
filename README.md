@@ -23,6 +23,8 @@ There are three different difficulty options.
 - A more difficult challenge
 - Speaks 5 codes to the user
 - Random delay of 3 to 6 seconds between each code read
+<br>
+The "Debug" option prints the program's inner workings to the console
 
 <br><br>
 ### Future Ideas
