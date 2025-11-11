@@ -28,6 +28,7 @@ There are three different difficulty options.
 
 Problem:
 It's too easy to skip memorising either the numbers or the letters 
+
 Solution:
 Add in rounds where all the possible answers have the same 3 letters or numbers
 
