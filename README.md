@@ -1,5 +1,5 @@
 # Training Listening Memory and Multitasking
-
+<br>
 ![Vocal Memory Game](public/vocalMemory.png)
 
 A small project made with vanilla Javascript, HTML, and CSS. There is a simple node express server to serve the files to localhost:3000. 
@@ -25,7 +25,7 @@ There are three different difficulty options.
 
 <br><br>
 ### Future Ideas
-
+<br>
 Problem:<br>
 It's too easy to skip memorising either the numbers or the letters<br>
 Solution:<br>
