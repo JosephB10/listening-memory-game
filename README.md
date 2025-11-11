@@ -30,11 +30,9 @@ Problem:<br>
 It's too easy to skip memorising either the numbers or the letters<br>
 Solution:<br>
 Add in rounds where all the possible answers have the same 3 letters or numbers
-
-
-Stretch Idea:
+<br><br>
+Stretch Idea:<br>
 It would be interesting to add a skill rating system that tracks your ability to answer questions. Then it could dynamically increase the difficulty by increasing the number of codes read or increasing the number of letters / numbers in each code. You could also use the idea from above where you add in different rounds to check if the user is gaming the system. Then you could increase the number of rounds that directly target their workaround.  
-
-
-Stretch Idea:
+<br><br>
+Stretch Idea:<br>
 Would love to flesh out this idea by adding in a multitasking style of game on top of this vocal memory element. So that it becomes a multitasking training game. 
