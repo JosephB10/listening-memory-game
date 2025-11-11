@@ -23,7 +23,7 @@ There are three different difficulty options.
 - Speaks 5 codes to the user
 - Random delay of 3 to 6 seconds between each code read
 
-
+<br><br>
 ### Future Ideas
 
 Problem:<br>
