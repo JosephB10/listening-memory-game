@@ -27,7 +27,7 @@ There are three different difficulty options.
 ### Future Ideas
 
 Problem:<br>
-It's too easy to skip memorising either the numbers or the letters 
+It's too easy to skip memorising either the numbers or the letters<br>
 Solution:<br>
 Add in rounds where all the possible answers have the same 3 letters or numbers
 
