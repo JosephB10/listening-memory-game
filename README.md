@@ -24,7 +24,10 @@ There are three different difficulty options.
 - Speaks 5 codes to the user
 - Random delay of 3 to 6 seconds between each code read
 <br>
-The "Debug" option prints the program's inner workings to the console
+
+### Notes
+- The "Debug" option prints the program's inner workings to the console
+- I've found Chrome's voices to be significantly better then Firefox
 
 <br><br>
 ### Future Ideas
