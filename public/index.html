@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <div class="overlay">
+        
+            <div class="startScreen contentBox active">
+                <button class="startButton activateButton" >Start</button>
+                <div class="difficultyDiv runningDivs">
+                    <button class="button difficultyOption">Fast Challenge</button>
+                    <button class="button difficultyOption selected">Training</button>
+                    <button class="button difficultyOption">Hard</button>
+                </div>
+        
+                
+
+            </div>
+        
+            <div class="runningScreen contentBox">
+                <button class="stopButton activateButton" >Stop</button>
+                
+                <div class="buttonsDiv runningDivs">
+                    <button class="first answers button">First</button>
+                    <button class="second answers button">Second</button>
+                    <button class="third answers button">Third</button>
+                    <button class="fourth answers button">Fourth</button>
+                </div>
+                <div class="runningText runningDivs active">
+                    <p>Running...</p>
+                </div>
+            </div>
+
+            <div class="alwaysVisible">
+                <div class="volumeDiv">
+                    <input type="range" class="volume" min="0" max="100" value="50">
+                    <label for="volume">Volume</label>
+                </div>
+        
+                <div class="score">
+                    <div class="rightAnswersDiv">
+                        <p class="rightAnswers">0</p>
+                        <label for="rightAnswers">Right</label>
+                    </div>
+                    <div class="wrongAnswersDiv">
+                        <p class="wrongAnswers">0</p>
+                        <label for="wrongAnswers">Wrong</label>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <button class="debug" onClick="printDebugToConsole()">!?</button>
+    
+    
+
+    <audio id="beep" src="/beep.mp3" preload="auto"></audio>
+    <audio id="click" src="/click.mp3" preload="auto"></audio>
+    <audio id="correct" src="/correct.mp3" preload="auto"></audio>
+    <script src="/script.js"></script>
+</body>
+</html>

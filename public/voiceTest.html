@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List & Test TTS Voices</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  button {
+    margin: 5px 0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: #a7f315;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #90fa39;
+  }
+  .voice-item {
+    margin: 5px 0;
+  }
+</style>
+</head>
+<body>
+<h1>Available TTS Voices</h1>
+<div id="voicesContainer"></div>
+
+<script>
+let voices = [];
+
+function populateVoices() {
+  voices = window.speechSynthesis.getVoices();
+  const container = document.getElementById("voicesContainer");
+  container.innerHTML = "";
+
+  voices.forEach((voice, i) => {
+    const btn = document.createElement("button");
+    btn.className = "voice-item";
+    btn.textContent = `${voice.name} (${voice.lang})${voice.default ? ' [default]' : ''}`;
+    btn.onclick = () => {
+      const utterance = new SpeechSynthesisUtterance(`Hello! This is ${voice.name}`);
+      utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    };
+    container.appendChild(btn);
+  });
+}
+
+// Voices may load asynchronously
+window.speechSynthesis.onvoiceschanged = populateVoices;
+
+// In case they’re already loaded
+populateVoices();
+</script>
+</body>
+</html>

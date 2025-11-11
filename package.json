@@ -1,0 +1,29 @@
+{
+  "name": "auditory-memory",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephB10/auditory-memory.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosephB10/auditory-memory/issues"
+  },
+  "homepage": "https://github.com/JosephB10/auditory-memory#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "say": "^0.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
