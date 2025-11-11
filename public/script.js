@@ -32,6 +32,14 @@ let audioText = "Default Text"
 let stopFlag = false
 let invalidOptions = new Set([])
 
+startButton.addEventListener("click", gameLoop)
+stopButton.addEventListener("click", () => {
+  stopFlag = true
+  window.speechSynthesis.cancel()
+})
+
+
+// ----------------------------------Difficulty Settings--------------------------------------
 
 let spokenOptions = 3
 let initialDelay = 7
@@ -74,22 +82,24 @@ async function changeSettings(e){
 }
 
 
-startButton.addEventListener("click", gameLoop)
-stopButton.addEventListener("click", () => {
-  stopFlag = true
-  window.speechSynthesis.cancel()
-})
 
+
+
+// ----------------------------------Playing Audio--------------------------------------
+
+
+
+//Wait until voices are loaded
+//Then pick the right one
 let selectedVoice = null
-
-// // Wait until voices are loaded
-// // Then pick the right one
 window.speechSynthesis.onvoiceschanged = () => {
   const voices = window.speechSynthesis.getVoices()
   selectedVoice = voices.find(v => v.name === "Google UK English Male") 
 }
 
 
+//HTML audio elements only play once then audio calls get ignored
+//This gets around that by cloning the node so each one plays separately
 async function playClickSound(){
   const sound = clickSound.cloneNode()
   sound.volume = volume.value / 100
@@ -120,24 +130,51 @@ function playAudio(audio){
 }
 
 
+
+
+// ----------------------------------Small Helper Functions--------------------------------------
+
+
+
+
+//Keeps the console from being plugged up with debug info
 async function printDebugToConsole(){
   console.log(debugText.join("\n"))
   debugText = []
 }
 
 
-//Creates a delay that's broken up into 50ms values to stop more promptly
+//Creates a delay that's broken up into 50ms values to stop more promptly when the stop button is selected
 const delay = (ms) => new Promise(resolve => {
   const start = Date.now();
   const interval = setInterval(() => {
     if (stopFlag || Date.now() - start >= ms) {
-      clearInterval(interval);
-      resolve();
+      clearInterval(interval)
+      resolve()
     }
-  }, 50); // check every 50ms
+  }, 50); 
 });
 
+//Returns a float between the min and max
+function getRandomFloatInRange(min, max) {
+  return Math.random() * (max - min) + min
+}
 
+function getRandomIntInRange(min,max){
+  return Math.floor(Math.random() * (max-min) + min)
+}
+
+
+
+
+
+
+// ----------------------------------Game Logic--------------------------------------
+
+
+//Returns a promise that resolves when one of the buttons has been selected
+//Resolves with the target of the button press
+//Play's an audible click
 function waitForButtonPress(buttons){
   return new Promise((resolve) => {
     const handler = (e) => {
@@ -153,54 +190,52 @@ function waitForButtonPress(buttons){
 
 
 
-//Returns a float between the min and max
-function getRandomFloatInRange(min, max) {
-  return Math.random() * (max - min) + min
-}
-
-function getRandomIntInRange(min,max){
-  return Math.floor(Math.random() * (max-min) + min)
-}
-
-
-
+//Returns a string of "### abc"
+//Uses the global invalidOptions set to make sure it doesn't return a copy
+//Could possibly return multiple copies when it's reading options
 function createRandomNames(){
 
   const numberOfLetters = 3
   const numberOfNumbers = 3
-  let endingValue
 
-
+  //Loops Until it's created a version that isn't in the invalidOptions set
   while(true){
 
     let name = []
   
+    //Not used but potentially useful in the future
     const ICAO_letters = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu"]
+    
     const numbers = ["0","1", "2", "3", "4", "5", "6", "7", "8", "9"]
     const letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
   
   
-  
+    //Get the numbers
     for(let i = 0; i < numberOfNumbers; i++){
       const numberIndex = getRandomIntInRange(0,numbers.length)
       name.push(numbers[numberIndex])
     }
   
+    //Separate the numbers and letters for readability
     name.push(" ")
   
+    //Get the letters
     for(let i = 0; i < numberOfLetters; i++){
       const lettersIndex = getRandomIntInRange(0, letters.length)
       name.push(letters[lettersIndex])
-  
     }
   
-    endingValue = name.join("")
 
+    const endingValue = name.join("")
+
+    //Return the value if it isn't in invalidOptions
     if(!invalidOptions.has(endingValue)){
       debugText.push("create Random Names Returns value: ", endingValue)
       return endingValue
     }
 
+
+    //Loop again
     debugText.push("Ran into a copy, rerunning: ", endingValue)
   }
 }
@@ -208,9 +243,16 @@ function createRandomNames(){
 
 
 
+
+// ----------------------------------Primary Gameplay Loop--------------------------------------
+
+
+
+//Function is called when the user selects "Start"
 async function gameLoop(){
 
 
+  //Use CSS class to remove start screen div and replace it with the running screen div
   startScreen.classList.remove("active")
   runningScreen.classList.add("active")
 
@@ -220,33 +262,38 @@ async function gameLoop(){
   }
 
 
-  //Initial Values
+  //Stop flag indicates when the loop should stop
+  //It's activated when the user select's the stop button
+  //Not perfect solution but good enough.
+
+  //Counter stops the game after 10 loops
   stopFlag = false
   let counter = 0
 
-  //Delay either a random amount or the initial amount
+  //Delay before the first iteration
   let time = initialDelay
   if(randomDelayTime === true){
     time = getRandomFloatInRange(initialDelay, endOfDelay )
   } 
   await delay(time * 1000)
 
+
+
   debugText.push(`Initial Delay time: ${time}`)
 
 
-  //Game Loop
-
+  
+  //This is used to catch errors and exiting early when getting a stop flag
   try{
 
-    // Outer Loop that runs 10 times
+    //Every Loop plays the audio and gets the users answer
     while(stopFlag === false && counter < 10){
-
       counter++
 
       invalidOptions = new Set([])
       const validOptions = []
       
-      //Creates 4 names that will be used for the multiple choice (one will be replaced with the correct)
+      //Creates 4 codes that will be used for the multiple choice (one will be replaced with the correct option from validOptions)
       for(let i = 0; i < 4; i++){
         invalidOptions.add(createRandomNames())
       }
@@ -259,17 +306,19 @@ async function gameLoop(){
 
       //--------------------------------------------- Logic to Speak the Names ---------------------------------
 
+      //Loops for each spoken code
       for(let i = 0; i < spokenOptions; i++){
         
         //Make sure the user hasn't selected stop
         if(stopFlag === true) throw new Error("stopFlag")
 
-        //Get a random and unique "123 abc" then push it to validOptions
+        //Get a code then push it to validOptions
         const nameValue = createRandomNames()
         validOptions.push(nameValue)
 
 
         //Play the Audio Clip 
+        //Use comma and spaces to slow down the Computers pronunciation
         await playAudio(nameValue.split(" ").join(",").split("").join(" "))
     
         //Delay either a random amount or the initial amount
@@ -278,10 +327,13 @@ async function gameLoop(){
         } 
         debugText.push(`Name: ${nameValue}, and Delayed: ${time}`)
         await delay(time * 1000)
-
-
       }
 
+
+      //--------------------------------------------- Insert a Correct Answer and Update the Buttons ---------------------------------
+
+      //Turn the invalid Options Set into an AnswerArray
+      //Use random values to select which correct value to insert where
       const answerArray = [...invalidOptions]
 
       const replacedIndex = getRandomIntInRange(0,4)
@@ -294,37 +346,52 @@ async function gameLoop(){
 
       answerArray[replacedIndex] = validReplacement
 
-
+      //Update the HTML BUttons
       for(let i = 0; i < answerArray.length; i++){
         answerButtons[i].textContent = answerArray[i]
       }
 
 
-      await delay(2000)
 
+
+      //--------------------------------------------- Make the Options Visible and wait for Selection ---------------------------------
+
+
+      //Exchange "Running..." text with the buttons
       runningText.classList.remove("active")
       buttonsDiv.classList.add("active")
 
+      //Play the Attention Grabbing Beep
       const beepSound = document.getElementById('beep')
       beepSound.volume = (volume.value / 100) * 0.5
       beepSound.play()
 
+      //Wait for the user's input
       const pressedButton = await waitForButtonPress(allStopButtons)
       if(pressedButton.textContent === "Stop") throw new Error("Stop Pressed")
 
 
+
+      //--------------------------------------------- Handle Correct vs Wrong Answers ---------------------------------
+
       pressedButton.classList.add("selected")
 
+      //Dramatic Pause Before Showing Answer
       await delay(2000)
 
 
       pressedButton.classList.remove("selected")
       
+
+      //Increase/Decrease the Right/Wrong Score
+      //Play the correct sound
+      //Update the buttons to be Red or Green
       if(pressedButton.textContent === validReplacement){
         rightAnswers.textContent = Number(rightAnswers.textContent) + 1
         correctSound.volume = (volume.value / 100) * 0.5
         correctSound.play()
         answerButtons[replacedIndex].classList.add("correct")
+
       } else{
         wrongAnswers.textContent = Number(wrongAnswers.textContent) + 1
         pressedButton.classList.add("wrong")
@@ -332,14 +399,16 @@ async function gameLoop(){
         
       }
       
+      //Allow the user to see the correct answer
       await delay(3000)
       
+
+      //Reset the CSS to switch back to the Running... text
       runningText.classList.add("active")
       buttonsDiv.classList.remove("active")
 
       answerButtons[replacedIndex].classList.remove("correct")
       pressedButton.classList.remove("wrong")
-
 
     }
 
@@ -349,6 +418,9 @@ async function gameLoop(){
     console.log("Catch: ", error)
     debugText.push(`Catch Error: ${error}`)
   }
+
+
+  //When we exit the loop switch back to the start screen 
 
   startScreen.classList.add("active")
   runningScreen.classList.remove("active")
